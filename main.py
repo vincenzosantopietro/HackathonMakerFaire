@@ -15,10 +15,22 @@
 # limitations under the License.
 #
 import webapp2
+import json
+
 
 class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
+    def post(self):
+        jsonobject = json.loads(self.request.body)
+
+        self.response.headers['Content-Type'] = 'application/json'
+
+        self.response.write(
+            json.dumps({
+                "speech":"Meteo di " + jsonobject['result']['parameters']['location'],
+                "displayText":"ciao ciao",
+                "source":"example"
+            },indent=4)
+        )
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
