@@ -8,6 +8,7 @@ import sys
 import ssl
 import urllib
 import yaml
+import re
 
 class Scraper:
 
@@ -180,19 +181,17 @@ class Scraper:
 
     def LavoraConNoi(self):
 
-        # self.context = ssl._create_unverified_context()
+        self.context = ssl._create_unverified_context()
+        #
+        # page = urlfetch.fetch(self.base_url + "lavora-con-noi", validate_certificate=True)
 
-        page = urlfetch.fetch(self.base_url + "lavora-con-noi", validate_certificate=True)
+        page = urllib.urlopen(self.base_url + "lavora-con-noi", context=self.context).read()
 
-        # page = urllib.urlopen(self.base_url + "lavora-con-noi", context=self.context).read()
-
-        soup = BeautifulSoup(page.content, 'html.parser')
+        soup = BeautifulSoup(page, 'html.parser')
 
         # elements = soup.find_all(attrs={"class" : "AmmTrasp"})
 
         list_lavoro = []
-
-
 
         rows = soup.findAll('tr')[1:-1]
 
@@ -204,7 +203,7 @@ class Scraper:
             text = row.find('p').string
             link = row.find('td')
             link = link.find(attrs={"class" : "AmmTrasp"})
-            link = link['href']
+            link = re.sub("[\s]", "+", link['href'])
 
 
             _lavoro['text'] = text
@@ -240,9 +239,9 @@ if __name__=='__main__':
     # _list_news = _scraper.getConvenzioni()
     # _list_bandi = _scraper.getBandi()
 
-    _list_lavoro = _scraper.getNews()
+    _list_lavoro = _scraper.LavoraConNoi()
 
-    # print (_list_lavoro)
+    print (_list_lavoro)
 
 
 
