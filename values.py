@@ -6,6 +6,8 @@ SORESA_ORARISEGRETERIA_INTENT_NAME='OrariSegreteria'
 SORESA_BANDI_INTENT_NAME='Bandi'
 SORESA_CONSIGLIOAMMINISTRAZIONE_INTENT_NAME='ConsiglioAmministrazione'
 SORESA_COLLEGIOSINDACALE_INTENT_NAME='CollegioSindacale'
+SORESA_CONVENIONI_INTENT_NAME='ConvenzioniPA'
+SORESA_BANDI_INTENT_NAME='Bandi'
 
 
 consiglio_amministrazione = ['Dott. Giovanni Porcelli - Presidente con funzioni di amministratore delegato',

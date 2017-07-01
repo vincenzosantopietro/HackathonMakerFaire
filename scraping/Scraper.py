@@ -56,9 +56,9 @@ class Scraper:
         return json.dumps( { "result": list_news }, indent=4, encoding='iso-8859-8').__str__()
 
 
-    def getBandi(self):
+    def getConvenzioni(self):
 
-        self.context = ssl._create_unverified_context()
+        # self.context = ssl._create_unverified_context()
 
         page = urlfetch.fetch(self.base_url + "area-pa", validate_certificate=True)
 
@@ -68,9 +68,9 @@ class Scraper:
 
         elements = soup.find(attrs={"class" : "convenzioni"})
 
-        list_news = []
+        list_convenzioni = []
 
-        _news = {
+        _convenzione = {
             "date": '',
             "text": '',
             "link": ''
@@ -81,22 +81,76 @@ class Scraper:
         list_elem = elem.findAll(attrs={"class": "row pitchItem dark"})
 
         for el in list_elem:
-            text = el.find(attrs={"class": "col-lg-10 col-md-10 col-sm-12 col-xs-12 description"}).find('p').string
             date = el.find(attrs={"class": "scadenza-bando"})
+            text = el.find(attrs={"class": "col-lg-10 col-md-10 col-sm-12 col-xs-12 description"}).find('p').string
             day = date.find(attrs={"class": "day"}).string
             month = date.find(attrs={"class": "month"}).string
             year = date.find(attrs={"class": "year"}).string
             link = el.find('a', href=True)
             link = self.base_url + link['href']
 
-            _news["date"] = day + month + year
-            _news["text"] = text
-            _news["link"] = link
+            _convenzione["date"] = day + month + year
+            _convenzione["text"] = text
+            _convenzione["link"] = link
 
-            list_news.append(_news)
+            list_convenzioni.append(_convenzione)
 
-        return json.dumps( { "result": list_news }, indent=4, encoding='iso-8859-8').__str__()
+        return json.dumps( { "result": list_convenzioni }, indent=4, encoding='iso-8859-8').__str__()
 
+
+    def getBandi(self):
+
+        self.context = ssl._create_unverified_context()
+
+        # page = urlfetch.fetch(self.base_url + "area-pa", validate_certificate=True)
+
+        page = urllib.urlopen(self.base_url + "area-imprese", context=self.context).read()
+
+        soup = BeautifulSoup(page, 'html.parser')
+
+        elements = soup.find(attrs={"id" : "ctl00_ctl46_g_ac06dc6c_e4cd_48cb_a345_7433379f2a6d"})
+
+        # print(elements)
+
+        list_bandi = []
+
+        _bando = {
+            "date": '',
+            "text": '',
+            "link": ''
+        }
+
+
+        row_pitchItem = elements.findAll(attrs={"class": "row pitchItem"} )
+        row_pitchItem_dark = elements.findAll(attrs={"class": "row pitchItem dark"})
+
+        for el in row_pitchItem:
+            text = el.find(attrs={"class": "show-read-more"}).string
+            date = el.find(attrs={"class": "scadenza-bando"}).string
+            link = el.find('a', href=True)
+            link = self.base_url + link['href']
+
+            _bando["date"] = date
+            _bando["text"] = text
+            _bando["link"] = link
+
+            list_bandi.append(_bando)
+
+        for el in row_pitchItem_dark:
+            text = el.find(attrs={"class": "show-read-more"}).string
+            date = el.find(attrs={"class": "scadenza-bando"}).string
+            link = el.find('a', href=True)
+            link = self.base_url + link['href']
+
+            _bando["date"] = date
+            _bando["text"] = text
+            _bando["link"] = link
+
+            list_bandi.append(_bando)
+
+
+        return json.dumps( { "result": list_bandi }, indent=4, encoding='iso-8859-8').__str__()
+#
 
 # def saveJson(url, data):
 #
@@ -117,9 +171,10 @@ if __name__=='__main__':
     _scraper = Scraper()
 
     # _list_news = _scraper.getNews()
-    _list_news = _scraper.getBandi()
+    # _list_news = _scraper.getConvenzioni()
+    _list_bandi = _scraper.getBandi()
 
-    print (_list_news)
+    print (_list_bandi)
 
 
 

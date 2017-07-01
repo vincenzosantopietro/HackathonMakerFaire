@@ -65,7 +65,7 @@ class MainHandler(webapp2.RequestHandler):
                 speech += name + "\n"
 
 
-        elif jsonobject['result']['metadata']['intentName'] == SORESA_ORARISEGRETERIA_INTENT_NAME:
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
 
             scraper = Scraper()
             list_bandi = scraper.getBandi()
@@ -74,6 +74,15 @@ class MainHandler(webapp2.RequestHandler):
             for i in range(len(data)):
                 speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
 
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_CONVENIONI_INTENT_NAME:
+
+            scraper = Scraper()
+            list_convenzioni = scraper.getConvenzioni()
+            data = json.loads(list_convenzioni)
+
+            for i in range(len(data)):
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
+                          data['result'][i]['link'] + "\n\n"
 
         else:
 
