@@ -126,8 +126,10 @@ class MainHandler(webapp2.RequestHandler):
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_LOCATION_INTENT_NAME:
 
-            speech = "Siamo qui"
-            location = position
+            speech = "I nostri uffici sono a Napoli, Complesso Esedra, Centro Direzionale Is. F9 80143 \n"
+            speech += 'https://goo.gl/maps/mTs9KfbM4ZU2'
+            source = jsonobject['result']['source']
+            # location = position
 
         else:
 
@@ -152,14 +154,16 @@ class MainHandler(webapp2.RequestHandler):
                 "speech": speech,
                 "displayText": speech,
                 "source": source,
-                "data": {
-                    "telegram": {
-                      "chat_id": jsonobject['id'],
-                      "text": speech,
-                      "reply_markup": keyboard
-                    }
-                }
+                # "data": {
+                #     "telegram": {
+                #       "chat_id": jsonobject['id'],
+                #       "text": speech,
+                #       "reply_markup": keyboard
+                #     }
+                # }
             }, indent=4)
+
+            logging.info(out_json)
 
             self.response.write(out_json)
 
@@ -174,7 +178,7 @@ class MainHandler(webapp2.RequestHandler):
                     "telegram": {
                         "chat_id": '@' + jsonobject['originalRequest']['data']['message']['from']['username'],
                         "latitude": float(location['latitude']),
-                        'longitude': float(location['longitude'])
+                        "longitude": float(location['longitude'])
                     }
                 }
             }, indent=4)
