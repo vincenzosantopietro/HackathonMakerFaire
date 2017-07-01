@@ -21,11 +21,10 @@ class MainHandler(webapp2.RequestHandler):
 
         if jsonobject['result']['metadata']['intentName'] == SORESA_NEWS_INTENT_NAME:
 
-            url = 'resources/news.json'
-            data = loadJson(url)
+            scraper = Scraper()
 
-            data = json.loads(data)
-
+            list_news = scraper.getNews()
+            data = json.loads(list_news)
 
             # print (data['result'][0])
 
