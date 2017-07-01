@@ -62,7 +62,7 @@ office_contacts = {
         'work_hours': 'dalle 08.00 alle 13.00 e dalle 13.45 alle 16.45'
     },
 
-    'acquisti': {
+    'ufficioacquisti': {
         'tel': '081 2128174',
         'fax': '081 7500012',
         'email': 'acquisti.centralizzazione@soresa.it',
