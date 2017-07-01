@@ -58,17 +58,17 @@ class Scraper:
         return json.dumps( { "result": list_news }, indent=4, encoding='iso-8859-8').__str__()
 
 
-def saveJson(url, data):
-
-    with open(url, 'w') as f:
-        json.dump(data,f)
-
-def loadJson(url):
-
-    with open(url) as data_file:
-        data = json.load(data_file)
-
-    return data
+# def saveJson(url, data):
+#
+#     with open(url, 'w') as f:
+#         json.dump(data,f)
+#
+# def loadJson(url):
+#
+#     with open(url) as data_file:
+#         data = json.load(data_file)
+#
+#     return data
 
 if __name__=='__main__':
 
@@ -77,7 +77,6 @@ if __name__=='__main__':
     _scraper = Scraper()
 
     _list_news = _scraper.getNews()
-    saveJson(url,_list_news)
 
 
 
