@@ -52,10 +52,14 @@ class MainHandler(webapp2.RequestHandler):
         elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
             speech = "Mmmh..controllo se puoi accedere ai contenuti\n"
 
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_CONSIGLIOAMMINISTRAZIONE_INTENT_NAME:
+
+            speech="Il consiglio di amministrazione di Soresa è composto da {} persone:\n\n".format(len(consiglio_amministrazione))
+            for name in consiglio_amministrazione:
+                speech += name + "\n"
         else:
 
             speech = self.request.body
-
 
         # Generating output JSON
 
