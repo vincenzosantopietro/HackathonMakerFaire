@@ -1,6 +1,6 @@
 cron:
 - description: "check news bandi"
-  url: /watcher_bandi
+  url: /control_bandi
   schedule: every 8 hours
   retry_parameters:
     min_backoff_seconds: 2.5

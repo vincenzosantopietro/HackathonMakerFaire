@@ -10,6 +10,7 @@ import logging
 import utils
 from user.handlers import *
 import re
+import base64
 from watchers import *
 
 
@@ -146,6 +147,25 @@ class MainHandler(webapp2.RequestHandler):
             source = jsonobject['result']['source']
             # location = position
 
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_TRACCIA_BANDI_INTENT_NAME:
+
+            user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
+            if (user.type == "impresa"):
+                scraper = Scraper()
+                list_bandi = scraper.getBandi()
+                data = json.loads(list_bandi)
+                speech = "Ecco i bandi per le imprese:\n\n"
+                inline_keyboard = []
+                for i in range(len(data['result'])):
+                    speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
+                              data['result'][i]['link'] + "\n\n"
+                    inline_keyboard.append([dict(text="Traccia Bando {}".format(i+1),url="https://soresaassinstant.appspot.com/watcher_bandi?link={}".format(base64.b64encode(data['result'][i]['link'])))])
+                keyboard = dict(inline_keyboard=inline_keyboard)
+
+            else:
+                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
+
+
         else:
 
             speech = self.request.body
@@ -206,5 +226,6 @@ class MainHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/register', RegisterHandler),
-    ('/watcher_bandi',BandiGaraWatcher)
+    ('/watcher_bandi',BandiGaraHandler),
+    ('control_bandi',CronHandler)
 ], debug=True)

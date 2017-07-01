@@ -14,6 +14,7 @@ SORESA_ORARI_UFFICIO_ORDINI_INTENT_NAME='Contatti_Orari_UfficioOrdini'
 SORESA_INFORMAZIONI_UFFICIO_ORDINI_INTENT_NAME='Contatti_Informazioni_UfficioOrdini'
 SORESA_TELEFONO_UFFICIO_ORDINI_INTENT_NAME='Contatti_Telefono_UfficioOrdini'
 SORESA_EMAIL_UFFICIO_ORDINI_INTENT_NAME='Contatti_Email_UfficioOrdini'
+SORESA_TRACCIA_BANDI_INTENT_NAME='TracciaBandi'
 
 # Dove siamo
 SORESA_LOCATION_INTENT_NAME = 'DoveSiamo'
@@ -25,7 +26,6 @@ SORESA_CONVENZIONI_INTENT_NAME='ConvenzioniPA'
 SORESA_BANDI_INTENT_NAME='Bandi'
 SORESA_CHISIAMO_NAME='ChiSiamo'
 SORESA_LAVORA_CON_NOI_NAME='LavoraConNoi'
-
 
 consiglio_amministrazione = ['Dott. Giovanni Porcelli - Presidente con funzioni di amministratore delegato',
                             'Avv. Giulia Abbate - consigliere',
