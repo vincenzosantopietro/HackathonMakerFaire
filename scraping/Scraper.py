@@ -16,6 +16,8 @@ class Scraper:
 
     def getNews(self):
 
+        # self.context = ssl._create_unverified_context()
+
         # page = urllib.urlopen(self.base_url + "Pagine/News.aspx", context=self.context).read()
 
         page = urlfetch.fetch(self.base_url + "Pagine/News.aspx", validate_certificate=True)
@@ -27,17 +29,17 @@ class Scraper:
 
         list_news = []
 
-        _news = {
-
-            "date": '',
-            "text": '',
-            "link": ''
-
-        }
 
         elements = elements[:-1]
 
         for el in elements:
+            _news = {
+
+                "date": '',
+                "text": '',
+                "link": ''
+
+            }
             date = el.find(attrs={"class": "date"})
             text = el.find('a', href=True).string
             link = el.find('a', href=True)
@@ -70,17 +72,16 @@ class Scraper:
 
         list_convenzioni = []
 
-        _convenzione = {
-            "date": '',
-            "text": '',
-            "link": ''
-        }
-
         elem = elements.find(attrs={"class": "row pitchItem dark"})
 
         list_elem = elem.findAll(attrs={"class": "row pitchItem dark"})
 
         for el in list_elem:
+            _convenzione = {
+                "date": '',
+                "text": '',
+                "link": ''
+            }
             date = el.find(attrs={"class": "scadenza-bando"})
             text = el.find(attrs={"class": "col-lg-10 col-md-10 col-sm-12 col-xs-12 description"}).find('p').string
             day = date.find(attrs={"class": "day"}).string
@@ -185,20 +186,21 @@ class Scraper:
 
         # page = urllib.urlopen(self.base_url + "lavora-con-noi", context=self.context).read()
 
-        soup = BeautifulSoup(page, 'html.parser')
+        soup = BeautifulSoup(page.content, 'html.parser')
 
         # elements = soup.find_all(attrs={"class" : "AmmTrasp"})
 
         list_lavoro = []
 
-        _lavoro = {
-            "text": '',
-            "link": ''
-        }
+
 
         rows = soup.findAll('tr')[1:-1]
 
         for row in rows:
+            _lavoro = {
+                "text": '',
+                "link": ''
+            }
             text = row.find('p').string
             link = row.find('td')
             link = link.find(attrs={"class" : "AmmTrasp"})
@@ -238,9 +240,9 @@ if __name__=='__main__':
     # _list_news = _scraper.getConvenzioni()
     # _list_bandi = _scraper.getBandi()
 
-    _list_lavoro = _scraper.getBandi()
+    _list_lavoro = _scraper.getNews()
 
-    print (_list_lavoro)
+    # print (_list_lavoro)
 
 
 
