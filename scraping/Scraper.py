@@ -100,7 +100,7 @@ class Scraper:
 
     def getBandi(self):
 
-        self.context = ssl._create_unverified_context()
+        #self.context = ssl._create_unverified_context()
 
         # page = urlfetch.fetch(self.base_url + "area-pa", validate_certificate=True)
 
