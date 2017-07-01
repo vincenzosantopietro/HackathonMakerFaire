@@ -21,7 +21,7 @@ class MainHandler(webapp2.RequestHandler):
 
         if jsonobject['result']['metadata']['intentName'] == SORESA_NEWS_INTENT_NAME:
 
-            url = '/Users/davidenardone/PycharmProjects/HackathonMakerFaire/resources/news.json'
+            url = 'resources/news.json'
             data = loadJson(url)
 
             data = json.loads(data)

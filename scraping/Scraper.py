@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from bs4 import BeautifulSoup
-import requests
+from google.appengine.api import urlfetch
+# import requests
 import json
 import sys
 import ssl
@@ -19,7 +20,7 @@ class Scraper:
 
         # page = urllib.urlopen(self.base_url + "Pagine/News.aspx", context=self.context).read()
 
-        page = requests.get(self.base_url + "Pagine/News.aspx", verify=False)
+        page = urlfetch.fetch(self.base_url + "Pagine/News.aspx", validate_certificate=True)
 
         # soup = BeautifulSoup(page, 'html.parser')
         soup = BeautifulSoup(page.content, 'html.parser')
