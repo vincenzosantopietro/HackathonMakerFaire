@@ -30,7 +30,7 @@ class MainHandler(webapp2.RequestHandler):
             speech = "Ecco le 5 ultime news pubblicate nella seziona News sul sito Soresa.it\n\n"
             # source = jsonobject['result']['source']
 
-            for i in range(5):
+            for i in range(3):
                 speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_WELCOME_INTENT_NAME:
@@ -63,6 +63,18 @@ class MainHandler(webapp2.RequestHandler):
             speech= "Il collegio sindacale di Soresa è composto da {} persone:\n\n".format(len(collegio_sindacale))
             for name in collegio_sindacale:
                 speech += name + "\n"
+
+
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_ORARISEGRETERIA_INTENT_NAME:
+
+            scraper = Scraper()
+            list_bandi = scraper.getBandi()
+            data = json.loads(list_bandi)
+
+            for i in range(len(data)):
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+
+
         else:
 
             speech = self.request.body
