@@ -126,6 +126,7 @@ class MainHandler(webapp2.RequestHandler):
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_LOCATION_INTENT_NAME:
 
+            speech = "Siamo qui"
             location = position
 
         else:
@@ -154,7 +155,7 @@ class MainHandler(webapp2.RequestHandler):
                 "data": {
                     "telegram": {
                       "chat_id": jsonobject['id'],
-                      "text" : speech,
+                      "text": speech,
                       "reply_markup": keyboard
                     }
                 }
@@ -171,12 +172,14 @@ class MainHandler(webapp2.RequestHandler):
                 "source": source,
                 "data": {
                     "telegram": {
-                        "chat_id": jsonobject['id'],
-                        "text": speech,
-                        "location": position
+                        "chat_id": '@' + jsonobject['originalRequest']['data']['message']['from']['username'],
+                        "latitude": float(location['latitude']),
+                        'longitude': float(location['longitude'])
                     }
                 }
             }, indent=4)
+
+            logging.info(out_json)
 
             self.response.write(out_json)
 
