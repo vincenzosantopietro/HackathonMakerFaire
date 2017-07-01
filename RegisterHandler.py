@@ -1,10 +1,17 @@
 import webapp2
-import json
+from user.handlers import *
+
 
 class RegisterHandler(webapp2.RequestHandler):
 
     def get(self):
 
-        if self.request.body is not None:
-            jsonobject = json.loads(self.request.body)
+        username = self.request.get('username')
+        type = self.request.get('type')
+
+        insert_user(username, type)
+
+        self.response.out.write("Ok registrato!")
+
+
 
