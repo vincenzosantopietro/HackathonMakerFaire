@@ -30,8 +30,8 @@ class MainHandler(webapp2.RequestHandler):
             speech = "Ecco le 5 ultime news pubblicate nella seziona News sul sito Soresa.it\n\n"
             # source = jsonobject['result']['source']
 
-            for i in range(3):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " -\n" + data['result'][i]['link'] + "\n\n"
+            for i in range(5):
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_WELCOME_INTENT_NAME:
 
