@@ -7,6 +7,7 @@ class BandiGaraHandler(webapp2.RequestHandler):
     def get(self):
         # seleziona un bando da tracciare
         link = base64.b64decode(self.request.get('link'))
+        username = self.request.get('username')
         # register on db
         pass
 

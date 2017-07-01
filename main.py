@@ -161,7 +161,7 @@ class MainHandler(webapp2.RequestHandler):
                 for i in range(len(data['result'])):
                     speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
                               data['result'][i]['link'] + "\n\n"
-                    inline_keyboard.append([dict(text="Traccia Bando {}".format(i+1),url="https://soresaassinstant.appspot.com/watcher_bandi?link={}".format(base64.b64encode(data['result'][i]['link'])))])
+                    inline_keyboard.append([dict(text="Traccia Bando {}".format(i+1),url="https://soresaassinstant.appspot.com/watcher_bandi?username={}&link={}".format(jsonobject['originalRequest']['data']['message']['from']['username'],base64.b64encode(data['result'][i]['link'])))])
                 keyboard = dict(inline_keyboard=inline_keyboard)
 
             else:
