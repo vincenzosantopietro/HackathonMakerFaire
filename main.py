@@ -92,6 +92,16 @@ class MainHandler(webapp2.RequestHandler):
                 speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
                           data['result'][i]['link'] + "\n\n"
 
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_CHISIAMO_NAME:
+
+            speech = "La So.Re.Sa. S.p.A. – Società Regionale per la Sanità – " \
+                     "è una società strumentale costituita dalla Regione Campania " \
+                     "per la realizzazione di azioni strategiche finalizzate alla razionalizzazione della spesa sanitaria regionale.\n" \
+                     "Telefono: 081 212 8174\n" \
+                     "Provincia: Provincia di Napoli\n" \
+                     "Sito Web:  <a href='https://www.soresa.it/'>https://www.soresa.it/</a>"
+
+
 
         elif 'Contatti_Orari' in jsonobject['result']['metadata']['intentName']:
             #office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
