@@ -97,8 +97,6 @@ class MainHandler(webapp2.RequestHandler):
                      "Provincia: Provincia di Napoli\n" \
                      "Sito Web:  <a href='https://www.soresa.it/'>https://www.soresa.it/</a>"
 
-
-
         elif 'Contatti_Orari' in jsonobject['result']['metadata']['intentName']:
             office = jsonobject['result']['parameters']['ufficio'].lower()
             office = re.sub('[\s+]', '', office)
