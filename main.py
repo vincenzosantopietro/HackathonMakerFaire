@@ -57,6 +57,12 @@ class MainHandler(webapp2.RequestHandler):
             speech="Il consiglio di amministrazione di Soresa è composto da {} persone:\n\n".format(len(consiglio_amministrazione))
             for name in consiglio_amministrazione:
                 speech += name + "\n"
+
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_COLLEGIOSINDACALE_INTENT_NAME:
+
+            speech= "Il collegio sindacale di Soresa è composto da {} persone:\n\n".format(len(collegio_sindacale))
+            for name in collegio_sindacale:
+                speech += name + "\n"
         else:
 
             speech = self.request.body
