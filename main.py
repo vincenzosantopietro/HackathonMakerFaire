@@ -7,7 +7,7 @@ from values import *
 from scraping.Scraper import *
 from RegisterHandler import RegisterHandler
 import logging
-
+from user.handlers import *
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -49,9 +49,6 @@ class MainHandler(webapp2.RequestHandler):
 
             speech="Ecco gli orari della segreteria:\n"
 
-        elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
-            speech = "Mmmh..controllo se puoi accedere ai contenuti\n"
-
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CONSIGLIOAMMINISTRAZIONE_INTENT_NAME:
 
             speech="Il consiglio di amministrazione di Soresa è composto da {} persone:\n\n".format(len(consiglio_amministrazione))
@@ -67,12 +64,18 @@ class MainHandler(webapp2.RequestHandler):
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
 
-            scraper = Scraper()
-            list_bandi = scraper.getBandi()
-            data = json.loads(list_bandi)
-
-            for i in range(len(data)):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+            user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
+            logging.info(user)
+            logging.info(user.type)
+            if(user.type == "impresa"):
+                scraper = Scraper()
+                list_bandi = scraper.getBandi()
+                data = json.loads(list_bandi)
+                speech = "Ecco i bandi per le imprese:\n\n"
+                for i in range(len(data)):
+                    speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+            else:
+                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CONVENIONI_INTENT_NAME:
 
