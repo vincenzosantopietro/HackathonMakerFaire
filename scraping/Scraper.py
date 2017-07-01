@@ -181,13 +181,13 @@ class Scraper:
 
     def LavoraConNoi(self):
 
-        self.context = ssl._create_unverified_context()
+        # self.context = ssl._create_unverified_context()
         #
-        # page = urlfetch.fetch(self.base_url + "lavora-con-noi", validate_certificate=True)
+        page = urlfetch.fetch(self.base_url + "lavora-con-noi", validate_certificate=True)
 
-        page = urllib.urlopen(self.base_url + "lavora-con-noi", context=self.context).read()
+        # page = urllib.urlopen(self.base_url + "lavora-con-noi", context=self.context).read()
 
-        soup = BeautifulSoup(page, 'html.parser')
+        soup = BeautifulSoup(page.content, 'html.parser')
 
         # elements = soup.find_all(attrs={"class" : "AmmTrasp"})
 
