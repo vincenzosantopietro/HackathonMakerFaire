@@ -1,25 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+
 
 import webapp2
-import json
 from values import *
-from SoresaScraper import SoresaNewsScraper
+from scraping.Scraper import *
 from RegisterHandler import RegisterHandler
 import logging
 
@@ -35,14 +20,20 @@ class MainHandler(webapp2.RequestHandler):
         logging.info(jsonobject['result']['metadata']['intentName'])
 
         if jsonobject['result']['metadata']['intentName'] == SORESA_NEWS_INTENT_NAME:
-            newsScraper = SoresaNewsScraper()
-            news_json = json.loads(newsScraper.getNews())
 
-            speech = "Ecco gli ultimi 3 articoli pubblicati sul sito soresa.it\n\n"
-            source = jsonobject['result']['source']
+            url = '/Users/davidenardone/PycharmProjects/HackathonMakerFaire/resources/news.json'
+            data = loadJson(url)
+
+            data = json.loads(data)
+
+
+            # print (data['result'][0])
+
+            speech = "Ecco le 5 ultime news pubblicate nella seziona News sul sito Soresa.it\n\n"
+            # source = jsonobject['result']['source']
 
             for i in range(3):
-                speech += news_json['result'][i]['date'] + ": " + news_json['result'][i]['title'] + " - link: " + news_json['result'][i]['url'] + "\n\n"
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_WELCOME_INTENT_NAME:
 
