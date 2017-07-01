@@ -21,11 +21,13 @@ class MainHandler(webapp2.RequestHandler):
     def post(self):
 
         jsonobject = json.loads(self.request.body)
+        out_json = None
 
         speech = ""
 
         source = jsonobject['result']['source']
         keyboard = None
+        location = None
         logging.info(jsonobject['result']['metadata']['intentName'])
 
         if jsonobject['result']['metadata']['intentName'] == SORESA_NEWS_INTENT_NAME:
@@ -105,7 +107,7 @@ class MainHandler(webapp2.RequestHandler):
         elif 'Contatti_Orari' in jsonobject['result']['metadata']['intentName']:
             office = jsonobject['result']['parameters']['ufficio'].lower()
             office = re.sub('[\s+]', '', office)
-            speech = utils.office_work_hour_contact_formatter('segreteria')
+            speech = utils.office_work_hour_contact_formatter(office)
 
         elif 'Contatti_Telefono' in jsonobject['result']['metadata']['intentName']:
             office = jsonobject['result']['parameters']['ufficio'].lower()
@@ -122,24 +124,27 @@ class MainHandler(webapp2.RequestHandler):
             office = re.sub('[\s+]', '', office)
             speech = utils.office_full_contact_formatter(office)
 
-        else:
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_LOCATION_INTENT_NAME:
 
+            location = position
+
+        else:
 
             speech = self.request.body
 
         # Generating output JSON
 
-        if keyboard is None:
+        if keyboard is None and location is None:
             self.response.headers['Content-Type'] = 'application/json'
 
             out_json = json.dumps({
-                    "speech":speech,
-                    "displayText":speech,
-                    "source":source
-                },indent=4)
+                    "speech": speech,
+                    "displayText": speech,
+                    "source": source
+                }, indent=4)
 
             self.response.write(out_json)
-        else:
+        elif keyboard is not None:
             self.response.headers['Content-Type'] = 'application/json'
 
             out_json = json.dumps({
@@ -151,6 +156,24 @@ class MainHandler(webapp2.RequestHandler):
                       "chat_id": jsonobject['id'],
                       "text" : speech,
                       "reply_markup": keyboard
+                    }
+                }
+            }, indent=4)
+
+            self.response.write(out_json)
+
+        elif location is not None:
+            self.response.headers['Content-Type'] = 'application/json'
+
+            out_json = json.dumps({
+                "speech": speech,
+                "displayText": speech,
+                "source": source,
+                "data": {
+                    "telegram": {
+                        "chat_id": jsonobject['id'],
+                        "text": speech,
+                        "location": position
                     }
                 }
             }, indent=4)

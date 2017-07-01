@@ -2,8 +2,7 @@ from values import office_contacts
 
 
 def office_full_contact_formatter(office_name):
-    speech = 'Telefono: ' + office_contacts[office_name]['tel'] + \
-             ' - opzione ' + str(office_contacts[office_name]['option']) + '\n'
+    speech = 'Telefono: ' + office_contacts[office_name]['tel'] + ' - opzione ' + str(office_contacts[office_name]['option']) + '\n'
     speech += 'FAX: ' + office_contacts[office_name]['fax'] + '\n'
     speech += 'Email: ' + office_contacts[office_name]['email'] + '\n'
     speech += 'PEC: ' + ' '.join(office_contacts[office_name]['pec']) + '\n'
@@ -29,8 +28,7 @@ def office_email_contact_formatter(office_name):
 
 
 def office_tel_contact_formatter(office_name):
-    speech = 'Telefono: ' + office_contacts[office_name]['tel'] + \
-             ' - opzione ' + str(office_contacts[office_name]['option']) + '\n'
+    speech = 'Telefono: ' + office_contacts[office_name]['tel'] + ' - opzione ' + str(office_contacts[office_name]['option']) + '\n'
     speech += 'FAX: ' + office_contacts[office_name]['fax'] + '\n'
 
     return speech
