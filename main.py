@@ -73,12 +73,12 @@ class MainHandler(webapp2.RequestHandler):
                 list_bandi = scraper.getBandi()
                 data = json.loads(list_bandi)
                 speech = "Ecco i bandi per le imprese:\n\n"
-                for i in range(len(data)):
+                for i in range(len(data['result'])):
                     speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
             else:
                 speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
-        elif jsonobject['result']['metadata']['intentName'] == SORESA_CONVENIONI_INTENT_NAME:
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_CONVENZIONI_INTENT_NAME:
 
             scraper = Scraper()
             list_convenzioni = scraper.getConvenzioni()
