@@ -9,6 +9,7 @@ from RegisterHandler import RegisterHandler
 import logging
 import utils
 from user.handlers import *
+import re
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -99,20 +100,23 @@ class MainHandler(webapp2.RequestHandler):
 
 
         elif 'Contatti_Orari' in jsonobject['result']['metadata']['intentName']:
-            #office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
-            logging.info(jsonobject)
+            office = jsonobject['result']['parameters']['ufficio'].lower()
+            office = re.sub('[\s+]', '', office)
             speech = utils.office_work_hour_contact_formatter('segreteria')
 
         elif 'Contatti_Telefono' in jsonobject['result']['metadata']['intentName']:
-            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            office = jsonobject['result']['parameters']['ufficio'].lower()
+            office = re.sub('[\s+]', '', office)
             speech = utils.office_tel_contact_formatter(office)
 
         elif 'Contatti_Email' in jsonobject['result']['metadata']['intentName']:
-            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            office = jsonobject['result']['parameters']['ufficio'].lower()
+            office = re.sub('[\s+]', '', office)
             speech = utils.office_email_contact_formatter(office)
 
         elif 'Contatti_Informazioni' in jsonobject['result']['metadata']['intentName']:
-            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            office = jsonobject['result']['parameters']['ufficio'].lower()
+            office = re.sub('[\s+]', '', office)
             speech = utils.office_full_contact_formatter(office)
 
         else:

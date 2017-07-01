@@ -6,7 +6,7 @@ def insert_user(username, type, platform='telegram'):
 
     key = ndb.Key(AccountModel, username)
 
-    user = AccountModel.query(AccountModel.user_id == key).get()
+    user = AccountModel.query(AccountModel.username == username).get()
 
     if user is None:
         user = AccountModel()
