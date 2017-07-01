@@ -13,10 +13,8 @@ class Scraper:
 
     def __init__(self, url='https://www.soresa.it/'):
         self.base_url = url
-        # self.context = ssl._create_unverified_context()
 
     def getNews(self):
-
 
         # page = urllib.urlopen(self.base_url + "Pagine/News.aspx", context=self.context).read()
 
@@ -52,7 +50,49 @@ class Scraper:
             _news["date"] = wk_day + day + month + year
             _news["text"] = text
             _news["link"] = link
-            #
+
+            list_news.append(_news)
+
+        return json.dumps( { "result": list_news }, indent=4, encoding='iso-8859-8').__str__()
+
+
+    def getBandi(self):
+
+        self.context = ssl._create_unverified_context()
+
+        page = urlfetch.fetch(self.base_url + "area-pa", validate_certificate=True)
+
+        # page = urllib.urlopen(self.base_url + "area-pa", context=self.context).read()
+
+        soup = BeautifulSoup(page.content, 'html.parser')
+
+        elements = soup.find(attrs={"class" : "convenzioni"})
+
+        list_news = []
+
+        _news = {
+            "date": '',
+            "text": '',
+            "link": ''
+        }
+
+        elem = elements.find(attrs={"class": "row pitchItem dark"})
+
+        list_elem = elem.findAll(attrs={"class": "row pitchItem dark"})
+
+        for el in list_elem:
+            text = el.find(attrs={"class": "col-lg-10 col-md-10 col-sm-12 col-xs-12 description"}).find('p').string
+            date = el.find(attrs={"class": "scadenza-bando"})
+            day = date.find(attrs={"class": "day"}).string
+            month = date.find(attrs={"class": "month"}).string
+            year = date.find(attrs={"class": "year"}).string
+            link = el.find('a', href=True)
+            link = self.base_url + link['href']
+
+            _news["date"] = day + month + year
+            _news["text"] = text
+            _news["link"] = link
+
             list_news.append(_news)
 
         return json.dumps( { "result": list_news }, indent=4, encoding='iso-8859-8').__str__()
@@ -76,7 +116,11 @@ if __name__=='__main__':
 
     _scraper = Scraper()
 
-    _list_news = _scraper.getNews()
+    # _list_news = _scraper.getNews()
+    _list_news = _scraper.getBandi()
+
+    print (_list_news)
+
 
 
 
