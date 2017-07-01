@@ -7,9 +7,15 @@ from values import *
 from scraping.Scraper import *
 from RegisterHandler import RegisterHandler
 import logging
-
+import utils
+from user.handlers import *
 
 class MainHandler(webapp2.RequestHandler):
+
+    def get(self):
+        _scraper = Scraper()
+        _scraper.get_contacts()
+
 
     def post(self):
 
@@ -45,10 +51,6 @@ class MainHandler(webapp2.RequestHandler):
                 [dict(text="Impresa privata / libero professionista", url="https://soresaassinstant.appspot.com/register?type=impresa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))]
             ])
 
-        elif jsonobject['result']['metadata']['intentName'] == SORESA_ORARISEGRETERIA_INTENT_NAME:
-
-            speech="Ecco gli orari della segreteria:\n"
-
         elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
             speech = "Mmmh..controllo se puoi accedere ai contenuti\n"
 
@@ -67,12 +69,18 @@ class MainHandler(webapp2.RequestHandler):
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
 
-            scraper = Scraper()
-            list_bandi = scraper.getBandi()
-            data = json.loads(list_bandi)
-
-            for i in range(len(data)):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+            user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
+            logging.info(user)
+            logging.info(user.type)
+            if(user.type == "impresa"):
+                scraper = Scraper()
+                list_bandi = scraper.getBandi()
+                data = json.loads(list_bandi)
+                speech = "Ecco i bandi per le imprese:\n\n"
+                for i in range(len(data)):
+                    speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+            else:
+                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CONVENIONI_INTENT_NAME:
 
@@ -85,16 +93,26 @@ class MainHandler(webapp2.RequestHandler):
                           data['result'][i]['link'] + "\n\n"
 
 
-        elif jsonobject['result']['metadata']['intentName'] == SORESA_CHISIAMO_NAME:
+        elif 'Contatti_Orari' in jsonobject['result']['metadata']['intentName']:
+            #office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            logging.info(jsonobject)
+            speech = utils.office_work_hour_contact_formatter('segreteria')
 
-            speech = "La So.Re.Sa. S.p.A. – Società Regionale per la Sanità – " \
-                     "è una società strumentale costituita dalla Regione Campania " \
-                     "per la realizzazione di azioni strategiche finalizzate alla razionalizzazione della spesa sanitaria regionale.\n" \
-                     "Telefono: 081 212 8174\n" \
-                     "Provincia: Provincia di Napoli\n" \
-                     "Sito Web:  <a href='https://www.soresa.it/'>https://www.soresa.it/</a>"
+        elif 'Contatti_Telefono' in jsonobject['result']['metadata']['intentName']:
+            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            speech = utils.office_tel_contact_formatter(office)
+
+        elif 'Contatti_Email' in jsonobject['result']['metadata']['intentName']:
+            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            speech = utils.office_email_contact_formatter(office)
+
+        elif 'Contatti_Informazioni' in jsonobject['result']['metadata']['intentName']:
+            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            speech = utils.office_full_contact_formatter(office)
+
 
         else:
+
 
             speech = self.request.body
 
