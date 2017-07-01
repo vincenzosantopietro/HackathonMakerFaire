@@ -150,7 +150,7 @@ class Scraper:
 
 
         return json.dumps( { "result": list_bandi }, indent=4, encoding='iso-8859-8').__str__()
-#
+
 
 # def saveJson(url, data):
 #
