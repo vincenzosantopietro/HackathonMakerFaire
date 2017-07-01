@@ -10,6 +10,8 @@ import logging
 import utils
 from user.handlers import *
 import re
+from watchers import *
+
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -139,8 +141,10 @@ class MainHandler(webapp2.RequestHandler):
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_LOCATION_INTENT_NAME:
 
-            speech = "Siamo qui"
-            location = position
+            speech = "I nostri uffici sono a Napoli, Complesso Esedra, Centro Direzionale Is. F9 80143 \n"
+            speech += 'https://goo.gl/maps/mTs9KfbM4ZU2'
+            source = jsonobject['result']['source']
+            # location = position
 
         else:
 
@@ -165,14 +169,16 @@ class MainHandler(webapp2.RequestHandler):
                 "speech": speech,
                 "displayText": speech,
                 "source": source,
-                "data": {
-                    "telegram": {
-                      "chat_id": jsonobject['id'],
-                      "text": speech,
-                      "reply_markup": keyboard
-                    }
-                }
+                 "data": {
+                     "telegram": {
+                       "chat_id": jsonobject['id'],
+                       "text": speech,
+                       "reply_markup": keyboard
+                     }
+                 }
             }, indent=4)
+
+            logging.info(out_json)
 
             self.response.write(out_json)
 
@@ -185,9 +191,9 @@ class MainHandler(webapp2.RequestHandler):
                 "source": source,
                 "data": {
                     "telegram": {
-                        "chat_id": '@' + jsonobject['originalRequest']['data']['message']['from']['username'],
+                        "chat_id": jsonobject['id'],
                         "latitude": float(location['latitude']),
-                        'longitude': float(location['longitude'])
+                        "longitude": float(location['longitude'])
                     }
                 }
             }, indent=4)
@@ -199,5 +205,6 @@ class MainHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/register', RegisterHandler)
+    ('/register', RegisterHandler),
+    ('/watcher_bandi',BandiGaraWatcher)
 ], debug=True)
