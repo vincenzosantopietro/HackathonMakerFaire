@@ -12,27 +12,26 @@ import logging
 class MainHandler(webapp2.RequestHandler):
 
     def post(self):
+
         jsonobject = json.loads(self.request.body)
 
         speech = ""
-        source = ""
+
+        source = jsonobject['result']['source']
         keyboard = None
         logging.info(jsonobject['result']['metadata']['intentName'])
 
         if jsonobject['result']['metadata']['intentName'] == SORESA_NEWS_INTENT_NAME:
 
             scraper = Scraper()
-
             list_news = scraper.getNews()
             data = json.loads(list_news)
-
-            # print (data['result'][0])
 
             speech = "Ecco le 5 ultime news pubblicate nella seziona News sul sito Soresa.it\n\n"
             # source = jsonobject['result']['source']
 
             for i in range(3):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " -\n" + data['result'][i]['link'] + "\n\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_WELCOME_INTENT_NAME:
 
@@ -46,10 +45,19 @@ class MainHandler(webapp2.RequestHandler):
                 [dict(text="Impresa privata / libero professionista", url="https://soresaassinstant.appspot.com/register?type=impresa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))]
             ])
 
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_ORARISEGRETERIA_INTENT_NAME:
+
+            speech="Ecco gli orari della segreteria:\n"
+
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
+            speech = "Mmmh..controllo se puoi accedere ai contenuti\n"
+
         else:
 
             speech = self.request.body
-            source = jsonobject['result']['source']
+
+
+        # Generating output JSON
 
         if keyboard is None:
             self.response.headers['Content-Type'] = 'application/json'

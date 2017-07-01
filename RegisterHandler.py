@@ -11,7 +11,7 @@ class RegisterHandler(webapp2.RequestHandler):
 
         insert_user(username, type)
 
-        self.response.out.write("Ok registrato!")
+        self.response.out.write("Sei stato registrato a E.L.S.A. Per usufruire dei contenuti continua ad interagire con il bot su Telegram!")
 
 
 
