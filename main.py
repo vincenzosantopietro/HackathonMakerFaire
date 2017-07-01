@@ -7,9 +7,15 @@ from values import *
 from scraping.Scraper import *
 from RegisterHandler import RegisterHandler
 import logging
+import utils
 from user.handlers import *
 
 class MainHandler(webapp2.RequestHandler):
+
+    def get(self):
+        _scraper = Scraper()
+        _scraper.get_contacts()
+
 
     def post(self):
 
@@ -45,9 +51,8 @@ class MainHandler(webapp2.RequestHandler):
                 [dict(text="Impresa privata / libero professionista", url="https://soresaassinstant.appspot.com/register?type=impresa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))]
             ])
 
-        elif jsonobject['result']['metadata']['intentName'] == SORESA_ORARISEGRETERIA_INTENT_NAME:
-
-            speech="Ecco gli orari della segreteria:\n"
+        elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
+            speech = "Mmmh..controllo se puoi accedere ai contenuti\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CONSIGLIOAMMINISTRAZIONE_INTENT_NAME:
 
@@ -87,7 +92,27 @@ class MainHandler(webapp2.RequestHandler):
                 speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
                           data['result'][i]['link'] + "\n\n"
 
+
+        elif 'Contatti_Orari' in jsonobject['result']['metadata']['intentName']:
+            #office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            logging.info(jsonobject)
+            speech = utils.office_work_hour_contact_formatter('segreteria')
+
+        elif 'Contatti_Telefono' in jsonobject['result']['metadata']['intentName']:
+            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            speech = utils.office_tel_contact_formatter(office)
+
+        elif 'Contatti_Email' in jsonobject['result']['metadata']['intentName']:
+            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            speech = utils.office_email_contact_formatter(office)
+
+        elif 'Contatti_Informazioni' in jsonobject['result']['metadata']['intentName']:
+            office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
+            speech = utils.office_full_contact_formatter(office)
+
+
         else:
+
 
             speech = self.request.body
 

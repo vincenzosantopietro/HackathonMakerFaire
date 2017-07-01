@@ -4,7 +4,7 @@ from Crypto.Hash import SHA256
 
 class AccountModel(ndb.Model):
     username = ndb.StringProperty(required=True)
-    key = ndb.KeyProperty(required=True)
+    user_id = ndb.KeyProperty(required=True)
     type = ndb.StringProperty(required=True, choices=[
         'privato',
         'pa',
