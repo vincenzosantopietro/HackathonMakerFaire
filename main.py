@@ -47,17 +47,19 @@ class MainHandler(webapp2.RequestHandler):
 
             speech ="Ciao, sono E.L.S.A., il tuo assistente personale per il mondo So.Re.Sa.\n\nLa So.Re.Sa. S.p.A. – Società Regionale per la Sanità – è una società strumentale costituita dalla Regione Campania per la realizzazione di azioni strategiche finalizzate alla razionalizzazione della spesa sanitaria regionale. \n\nChe tipologia di utente pensi di essere?"
             source = jsonobject['result']['source']
+            logging.info(jsonobject['originalRequest']['data']['message']['from']['username'])
             keyboard = dict(inline_keyboard=[
-                [dict(text="Pubblica Amministrazione", url="https://soresaassistant.appspot.com/register?type=pa&username=".format(jsonobject['originalRequest']['data']['message']['username']))],
-                [dict(text="Privato", url="https://soresaassistant.appspot.com/register?type=privato&username=".format(jsonobject['originalRequest']['data']['message']['username']))],
-                [dict(text="ASL", url="https://soresaassistant.appspot.com/register?type=asl&username=".format(jsonobject['originalRequest']['data']['message']['username']))],
-                [dict(text="Impresa privata / libero professionista", url="https://soresaassistant.appspot.com/register?type=impresa&username=".format(jsonobject['originalRequest']['data']['message']['username']))]
+                [dict(text="Pubblica Amministrazione", url="https://soresaassistant.appspot.com/register?type=pa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
+                [dict(text="Privato", url="https://soresaassistant.appspot.com/register?type=privato&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
+                [dict(text="ASL", url="https://soresaassistant.appspot.com/register?type=asl&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
+                [dict(text="Impresa privata / libero professionista", url="https://soresaassistant.appspot.com/register?type=impresa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))]
             ])
 
-        #else:
+        else:
 
-        #    speech = self.request.body
-        #    source = jsonobject['result']['source']
+            speech = self.request.body
+            source = jsonobject['result']['source']
+
         if(keyboard is None):
             self.response.headers['Content-Type'] = 'application/json'
 
