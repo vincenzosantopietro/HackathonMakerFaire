@@ -13,10 +13,10 @@ class AccountModel(ndb.Model):
     ])
 
     def get_key_from_username(self):
-        return SHA256.new(self.username).hexdigest()
+        return ndb.Key(AccountModel, SHA256.new(self.username).hexdigest())
 
 
 class AliasModel(ndb.Model):
-    aliases = ndb.StringProperty(required=True)
-    platforms = ndb.StringProperty(required=True)
+    alias = ndb.StringProperty(required=True)
+    platform = ndb.StringProperty(required=True)
 

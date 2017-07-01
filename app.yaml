@@ -16,3 +16,6 @@ libraries:
 
 - name: six
   version: "1.9.0"
+
+- name: pycrypto
+  version: "latest"

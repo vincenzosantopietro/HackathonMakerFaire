@@ -15,8 +15,8 @@ def insert_user(username, type, platform='telegram'):
         user.put()
 
         user_alias = AliasModel(parent=user.key)
-        user_alias.aliases = [username]
-        user_alias.platforms = [platform]
+        user_alias.alias = username
+        user_alias.platform = platform
         user_alias.put()
 
 

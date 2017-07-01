@@ -60,7 +60,7 @@ class MainHandler(webapp2.RequestHandler):
             speech = self.request.body
             source = jsonobject['result']['source']
 
-        if(keyboard is None):
+        if keyboard is None:
             self.response.headers['Content-Type'] = 'application/json'
 
             out_json = json.dumps({
