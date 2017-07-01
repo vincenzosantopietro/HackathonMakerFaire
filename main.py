@@ -10,6 +10,8 @@ import logging
 import utils
 from user.handlers import *
 import re
+from watchers import *
+
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -154,13 +156,13 @@ class MainHandler(webapp2.RequestHandler):
                 "speech": speech,
                 "displayText": speech,
                 "source": source,
-                # "data": {
-                #     "telegram": {
-                #       "chat_id": jsonobject['id'],
-                #       "text": speech,
-                #       "reply_markup": keyboard
-                #     }
-                # }
+                 "data": {
+                     "telegram": {
+                       "chat_id": jsonobject['id'],
+                       "text": speech,
+                       "reply_markup": keyboard
+                     }
+                 }
             }, indent=4)
 
             logging.info(out_json)
@@ -190,5 +192,6 @@ class MainHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/register', RegisterHandler)
+    ('/register', RegisterHandler),
+    ('/watcher_bandi',BandiGaraWatcher)
 ], debug=True)
