@@ -1,4 +1,5 @@
 from model import *
+import logging
 
 
 def insert_user(username, type, platform='telegram'):
@@ -22,4 +23,4 @@ def insert_user(username, type, platform='telegram'):
 
 def get_user(username):
     key = ndb.Key(AccountModel, username)
-    return AccountModel.query(AccountModel.user_id == key).get()
+    return AccountModel.query(AccountModel.username == username).get()

@@ -1,6 +1,6 @@
 from google.appengine.ext import ndb
 from Crypto.Hash import SHA256
-
+import logging
 
 class AccountModel(ndb.Model):
     username = ndb.StringProperty(required=True)

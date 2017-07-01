@@ -51,9 +51,6 @@ class MainHandler(webapp2.RequestHandler):
                 [dict(text="Impresa privata / libero professionista", url="https://soresaassinstant.appspot.com/register?type=impresa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))]
             ])
 
-        elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
-            speech = "Mmmh..controllo se puoi accedere ai contenuti\n"
-
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CONSIGLIOAMMINISTRAZIONE_INTENT_NAME:
 
             speech="Il consiglio di amministrazione di Soresa è composto da {} persone:\n\n".format(len(consiglio_amministrazione))
@@ -70,8 +67,6 @@ class MainHandler(webapp2.RequestHandler):
         elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
 
             user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
-            logging.info(user)
-            logging.info(user.type)
             if(user.type == "impresa"):
                 scraper = Scraper()
                 list_bandi = scraper.getBandi()
@@ -119,7 +114,6 @@ class MainHandler(webapp2.RequestHandler):
         elif 'Contatti_Informazioni' in jsonobject['result']['metadata']['intentName']:
             office = jsonobject['result']['metadata']['intentName'].split('_')[-1].lower()
             speech = utils.office_full_contact_formatter(office)
-
 
         else:
 
