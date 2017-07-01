@@ -23,6 +23,7 @@ from SoresaScraper import SoresaNewsScraper
 from RegisterHandler import RegisterHandler
 import logging
 
+
 class MainHandler(webapp2.RequestHandler):
 
     def post(self):
@@ -49,10 +50,10 @@ class MainHandler(webapp2.RequestHandler):
             source = jsonobject['result']['source']
             logging.info(jsonobject['originalRequest']['data']['message']['from']['username'])
             keyboard = dict(inline_keyboard=[
-                [dict(text="Pubblica Amministrazione", url="https://soresaassistant.appspot.com/register?type=pa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
-                [dict(text="Privato", url="https://soresaassistant.appspot.com/register?type=privato&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
-                [dict(text="ASL", url="https://soresaassistant.appspot.com/register?type=asl&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
-                [dict(text="Impresa privata / libero professionista", url="https://soresaassistant.appspot.com/register?type=impresa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))]
+                [dict(text="Pubblica Amministrazione", url="https://soresaassinstant.appspot.com/register?type=pa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
+                [dict(text="Privato", url="https://soresaassinstant.appspot.com/register?type=privato&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
+                [dict(text="ASL", url="https://soresaassinstant.appspot.com/register?type=asl&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
+                [dict(text="Impresa privata / libero professionista", url="https://soresaassinstant.appspot.com/register?type=impresa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))]
             ])
 
         else:
