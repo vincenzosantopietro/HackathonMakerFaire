@@ -91,6 +91,19 @@ class MainHandler(webapp2.RequestHandler):
                 for i in range(len(data['result'])):
                     speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
                               data['result'][i]['link'] + "\n\n"
+
+            elif jsonobject['result']['metadata']['intentName'] == SORESA_LAVORA_CON_NOI_NAME:
+                user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
+
+                if (user.type == "pa"):
+                    scraper = Scraper()
+                    list_convenzioni = scraper.LavoraConNoi()
+                    data = json.loads(list_convenzioni)
+
+                    for i in range(len(data['result'])):
+                        speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
+                                  data['result'][i]['link'] + "\n\n"
+
             else:
                 speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 

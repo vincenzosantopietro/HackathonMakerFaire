@@ -100,9 +100,9 @@ class Scraper:
 
     def getBandi(self):
 
-        #self.context = ssl._create_unverified_context()
+        # self.context = ssl._create_unverified_context()
 
-        # page = urlfetch.fetch(self.base_url + "area-pa", validate_certificate=True)
+        # page = urllib.urlopen(self.base_url + "area-imprese",  context=self.context).read()
 
         page = urlfetch.fetch(self.base_url + "area-imprese", validate_certificate=True)
 
@@ -114,18 +114,24 @@ class Scraper:
 
         list_bandi = []
 
-        _bando = {
-            "date": '',
-            "text": '',
-            "link": ''
-        }
 
 
         row_pitchItem = elements.findAll(attrs={"class": "row pitchItem"} )
         row_pitchItem_dark = elements.findAll(attrs={"class": "row pitchItem dark"})
 
         for el in row_pitchItem:
+            _bando = {
+                "date": '',
+                "text": '',
+                "link": ''
+            }
             text = el.find(attrs={"class": "show-read-more"}).string
+            if text is None:
+                continue
+            # print (text)
+            # if text is None:
+            #     continue
+
             date = el.find(attrs={"class": "scadenza-bando"}).string
             link = el.find('a', href=True)
             link = self.base_url + link['href']
@@ -134,10 +140,23 @@ class Scraper:
             _bando["text"] = text
             _bando["link"] = link
 
+            # print (_bando)
+            # print ("***********************")
             list_bandi.append(_bando)
 
         for el in row_pitchItem_dark:
+
+            _bando = {
+                "date": '',
+                "text": '',
+                "link": ''
+            }
+
             text = el.find(attrs={"class": "show-read-more"}).string
+            if text is None:
+                continue
+
+            # print(text)
             date = el.find(attrs={"class": "scadenza-bando"}).string
             link = el.find('a', href=True)
             link = self.base_url + link['href']
@@ -146,10 +165,55 @@ class Scraper:
             _bando["text"] = text
             _bando["link"] = link
 
+            # print (_bando)
+            # print ("***********************")
+        #
             list_bandi.append(_bando)
+
+        # print ("***********************")
+
 
 
         return json.dumps( { "result": list_bandi }, indent=4, encoding='iso-8859-8').__str__()
+
+
+    def LavoraConNoi(self):
+
+        # self.context = ssl._create_unverified_context()
+
+        page = urlfetch.fetch(self.base_url + "lavora-con-noi", validate_certificate=True)
+
+        # page = urllib.urlopen(self.base_url + "lavora-con-noi", context=self.context).read()
+
+        soup = BeautifulSoup(page, 'html.parser')
+
+        # elements = soup.find_all(attrs={"class" : "AmmTrasp"})
+
+        list_lavoro = []
+
+        _lavoro = {
+            "text": '',
+            "link": ''
+        }
+
+        rows = soup.findAll('tr')[1:-1]
+
+        for row in rows:
+            text = row.find('p').string
+            link = row.find('td')
+            link = link.find(attrs={"class" : "AmmTrasp"})
+            link = link['href']
+
+
+            _lavoro['text'] = text
+            _lavoro['link'] = link
+
+            list_lavoro.append(_lavoro)
+
+
+        return json.dumps( { "result": list_lavoro }, indent=4, encoding='iso-8859-8').__str__()
+
+
 
 
 # def saveJson(url, data):
@@ -172,9 +236,11 @@ if __name__=='__main__':
 
     # _list_news = _scraper.getNews()
     # _list_news = _scraper.getConvenzioni()
-    _list_bandi = _scraper.getBandi()
+    # _list_bandi = _scraper.getBandi()
 
-    print (_list_bandi)
+    _list_lavoro = _scraper.getBandi()
+
+    print (_list_lavoro)
 
 
 

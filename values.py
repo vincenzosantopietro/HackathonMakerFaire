@@ -24,6 +24,7 @@ SORESA_COLLEGIOSINDACALE_INTENT_NAME='CollegioSindacale'
 SORESA_CONVENZIONI_INTENT_NAME='ConvenzioniPA'
 SORESA_BANDI_INTENT_NAME='Bandi'
 SORESA_CHISIAMO_NAME='ChiSiamo'
+SORESA_LAVORA_CON_NOI_NAME='LavoraConNoi'
 
 
 consiglio_amministrazione = ['Dott. Giovanni Porcelli - Presidente con funzioni di amministratore delegato',
