@@ -176,7 +176,7 @@ class MainHandler(webapp2.RequestHandler):
                 "source": source,
                 "data": {
                     "telegram": {
-                        "chat_id": '@' + jsonobject['originalRequest']['data']['message']['from']['username'],
+                        "chat_id": jsonobject['id'],
                         "latitude": float(location['latitude']),
                         "longitude": float(location['longitude'])
                     }
