@@ -102,13 +102,13 @@ class Scraper:
 
     def getBandi(self):
 
-        self.context = ssl._create_unverified_context()
+        # self.context = ssl._create_unverified_context()
 
-        page = urllib.urlopen(self.base_url + "area-imprese",  context=self.context).read()
+        # page = urllib.urlopen(self.base_url + "area-imprese",  context=self.context).read()
 
-        # page = urlfetch.fetch(self.base_url + "area-imprese", validate_certificate=True)
+        page = urlfetch.fetch(self.base_url + "area-imprese", validate_certificate=True)
 
-        soup = BeautifulSoup(page, 'html.parser')
+        soup = BeautifulSoup(page.content, 'html.parser')
 
         elements = soup.find(attrs={"id" : "ctl00_ctl46_g_ac06dc6c_e4cd_48cb_a345_7433379f2a6d"})
 
