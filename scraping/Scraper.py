@@ -102,20 +102,19 @@ class Scraper:
 
     def getBandi(self):
 
-        # self.context = ssl._create_unverified_context()
+        self.context = ssl._create_unverified_context()
 
-        # page = urllib.urlopen(self.base_url + "area-imprese",  context=self.context).read()
+        page = urllib.urlopen(self.base_url + "area-imprese",  context=self.context).read()
 
-        page = urlfetch.fetch(self.base_url + "area-imprese", validate_certificate=True)
+        # page = urlfetch.fetch(self.base_url + "area-imprese", validate_certificate=True)
 
-        soup = BeautifulSoup(page.content, 'html.parser')
+        soup = BeautifulSoup(page, 'html.parser')
 
         elements = soup.find(attrs={"id" : "ctl00_ctl46_g_ac06dc6c_e4cd_48cb_a345_7433379f2a6d"})
 
         # print(elements)
 
         list_bandi = []
-
 
 
         row_pitchItem = elements.findAll(attrs={"class": "row pitchItem"} )
@@ -138,7 +137,7 @@ class Scraper:
             link = el.find('a', href=True)
             link = self.base_url + link['href']
 
-            _bando["date"] = date
+            _bando["date"] = re.sub('[\s\r\n]+Data', "Data", date)
             _bando["text"] = text
             _bando["link"] = link
 
@@ -163,13 +162,11 @@ class Scraper:
             link = el.find('a', href=True)
             link = self.base_url + link['href']
 
-            _bando["date"] = date
+            _bando["date"] = re.sub('[\s\r\n]+Data', "Data", date)
             _bando["text"] = text
             _bando["link"] = link
 
-            # print (_bando)
-            # print ("***********************")
-        #
+
             list_bandi.append(_bando)
 
         # print ("***********************")
@@ -288,10 +285,10 @@ if __name__=='__main__':
     _scraper = Scraper()
 
     # _list_news = _scraper.getNews()
-    # _list_news = _scraper.getConvenzioni()
-    det = _scraper.get_dettaglio_bando("https://www.soresa.it/Pagine/BandoDettaglio.aspx?idDoc=213887&tipoDoc=BANDO_GARA_PORTALE")
+    _list_bandi = _scraper.getBandi()
+    # det = _scraper.get_dettaglio_bando("https://www.soresa.it/Pagine/BandoDettaglio.aspx?idDoc=213887&tipoDoc=BANDO_GARA_PORTALE")
 
-    print (det)
+    print (_list_bandi)
 
 
 

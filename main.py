@@ -85,7 +85,7 @@ class MainHandler(webapp2.RequestHandler):
             data = json.loads(list_bandi)
             speech = "Ecco i bandi per le imprese:\n\n"
             for i in range(len(data['result'])):
-                speech += data['result'][i]['date'].replaceAll("\\s+","") + ": " + data['result'][i]['text'] + "\n - link: " + data['result'][i]['link'] + "\n\n"
+                speech += data['result'][i]['date'] + " - \n " + data['result'][i]['text'] + "\n - link: " + data['result'][i]['link'] + "\n\n"
             # else:
             #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
@@ -98,7 +98,7 @@ class MainHandler(webapp2.RequestHandler):
             data = json.loads(list_convenzioni)
 
             for i in range(len(data['result'])):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n - link: " + \
                           data['result'][i]['link'] + "\n\n"
             # else:
             #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
@@ -167,7 +167,7 @@ class MainHandler(webapp2.RequestHandler):
             speech = "Ecco i bandi per le imprese:\n\n"
             inline_keyboard = []
             for i in range(len(data['result'])):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n - link: " + \
                           data['result'][i]['link'] + "\n\n"
                 inline_keyboard.append([dict(text="Traccia Bando {}".format(i+1),url="https://elsa-proj.appspot.com/watcher_bandi?username={}&link={}".format(jsonobject['originalRequest']['data']['message']['from']['username'],base64.b64encode(data['result'][i]['link'])))])
             keyboard = dict(inline_keyboard=inline_keyboard)
