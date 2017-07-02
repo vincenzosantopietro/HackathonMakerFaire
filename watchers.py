@@ -67,7 +67,7 @@ class CronHandler(webapp2.RequestHandler):
                                    method=urlfetch.POST)
                     bando.last_edits = j_bando
                     bando.put()
-                if date - datetime.now().date() < 3:
+                if (date - datetime.now().date()).days < 3:
 
                     user = get_user(bando.username)
                     urlfetch.fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage",
@@ -76,5 +76,3 @@ class CronHandler(webapp2.RequestHandler):
                                    method=urlfetch.POST)
                     bando.last_edits = j_bando
                     bando.put()
-
-
