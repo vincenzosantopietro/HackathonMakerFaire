@@ -67,12 +67,19 @@ class CronHandler(webapp2.RequestHandler):
                                    method=urlfetch.POST)
                     bando.last_edits = j_bando
                     bando.put()
-                if (date - datetime.now().date()).days < 3:
+
+                remainingDay = (date - datetime.now().date()).days
+                if 0 < remainingDay < 3:
 
                     user = get_user(bando.username)
                     urlfetch.fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage",
                                    payload=urllib.urlencode({"chat_id": user.chat_id,
-                                                             "text": 'Mancano 3 giorni alla scadenza del bando \n' + bando.link}),
+                                                             "text": 'Mancano {} giorni/o alla scadenza del bando \n'.format(remainingDay) + bando.link}),
                                    method=urlfetch.POST)
-                    bando.last_edits = j_bando
-                    bando.put()
+                elif remainingDay == 0:
+                    user = get_user(bando.username)
+                    urlfetch.fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage",
+                                   payload=urllib.urlencode({"chat_id": user.chat_id,
+                                                             "text": 'Il bando scade oggi \n'.format(
+                                                                 remainingDay) + bando.link}),
+                                   method=urlfetch.POST)

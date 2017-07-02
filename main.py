@@ -79,46 +79,46 @@ class MainHandler(webapp2.RequestHandler):
         elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
 
             user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
-            # if(user.type == "impresa"):
-            scraper = Scraper()
-            list_bandi = scraper.getBandi()
-            data = json.loads(list_bandi)
-            speech = "Ecco i bandi per le imprese:\n\n"
-            for i in range(len(data['result'])):
-                speech += data['result'][i]['date'] + " - \n " + data['result'][i]['text'] + "\n - Link: " + data['result'][i]['link'] + "\n\n"
-            # else:
-            #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
+            if(user.type == "impresa"):
+                scraper = Scraper()
+                list_bandi = scraper.getBandi()
+                data = json.loads(list_bandi)
+                speech = "Ecco i bandi per le imprese:\n\n"
+                for i in range(len(data['result'])):
+                    speech += data['result'][i]['date'] + " - \n " + data['result'][i]['text'] + "\n - Link: " + data['result'][i]['link'] + "\n\n"
+            else:
+                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CONVENZIONI_INTENT_NAME:
             user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
 
-            # if (user.type == "pa"):
-            scraper = Scraper()
-            list_convenzioni = scraper.getConvenzioni()
-            data = json.loads(list_convenzioni)
+            if (user.type == "pa"):
+                scraper = Scraper()
+                list_convenzioni = scraper.getConvenzioni()
+                data = json.loads(list_convenzioni)
 
-            for i in range(len(data['result'])):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n - Link: " + \
-                          data['result'][i]['link'] + "\n\n"
-            # else:
-            #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
+                for i in range(len(data['result'])):
+                    speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n - Link: " + \
+                              data['result'][i]['link'] + "\n\n"
+            else:
+                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_LAVORA_CON_NOI_NAME:
-            # user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
+            user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
 
-            # if (user.type == "pa"):
-            scraper = Scraper()
-            list_convenzioni = scraper.LavoraConNoi()
-            data = json.loads(list_convenzioni)
+            if (user.type == "pa"):
+                scraper = Scraper()
+                list_convenzioni = scraper.LavoraConNoi()
+                data = json.loads(list_convenzioni)
 
-            speech = "Ecco gli ultimi 3 bandi di concorso sul sito Soresa.it\n\n"
+                speech = "Ecco gli ultimi 3 bandi di concorso sul sito Soresa.it\n\n"
 
-            for i in range(len(data['result'][:3])):
-                speech += data['result'][i]['text'] + "\n - Link: " + \
-                          data['result'][i]['link'] + "\n\n"
+                for i in range(len(data['result'][:3])):
+                    speech += data['result'][i]['text'] + "\n - Link: " + \
+                              data['result'][i]['link'] + "\n\n"
 
-            # else:
-            #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
+            else:
+                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CHISIAMO_NAME:
 
@@ -160,26 +160,25 @@ class MainHandler(webapp2.RequestHandler):
         elif jsonobject['result']['metadata']['intentName'] == SORESA_TRACCIA_BANDI_INTENT_NAME:
 
             user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
-            # if (user.type == "impresa"):
-            scraper = Scraper()
-            list_bandi = scraper.getBandi()
-            data = json.loads(list_bandi)
-            speech = "Ecco i bandi per le imprese:\n\n"
-            inline_keyboard = []
-            for i in range(len(data['result'])):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n - Link: " + \
-                          data['result'][i]['link'] + "\n\n"
-                inline_keyboard.append([dict(text="Traccia Bando {}".format(i+1),url="https://elsa-proj.appspot.com/watcher_bandi?username={}&link={}".format(jsonobject['originalRequest']['data']['message']['from']['username'],base64.b64encode(data['result'][i]['link'])))])
-            keyboard = dict(inline_keyboard=inline_keyboard)
+            if (user.type == "impresa"):
+                scraper = Scraper()
+                list_bandi = scraper.getBandi()
+                data = json.loads(list_bandi)
+                speech = "Ecco i bandi per le imprese:\n\n"
+                inline_keyboard = []
+                for i in range(len(data['result'])):
+                    speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n - Link: " + \
+                              data['result'][i]['link'] + "\n\n"
+                    inline_keyboard.append([dict(text="Traccia Bando {}".format(i+1),url="https://elsa-proj.appspot.com/watcher_bandi?username={}&link={}".format(jsonobject['originalRequest']['data']['message']['from']['username'],base64.b64encode(data['result'][i]['link'])))])
+                keyboard = dict(inline_keyboard=inline_keyboard)
 
-            # else:
-            #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
+            else:
+                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
 
         else:
 
-            speech = "Potresti essere più specifico?" \
-                     ""
+            speech = "Potresti essere più specifico?"
 
         # Generating output JSON
 
