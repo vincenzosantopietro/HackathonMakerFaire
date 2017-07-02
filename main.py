@@ -47,7 +47,7 @@ class MainHandler(webapp2.RequestHandler):
             # source = jsonobject['result']['source']
 
             for i in range(3):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n - Link: " + data['result'][i]['link'] + "\n\n"
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n" + data['result'][i]['link'] + "\n\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_WELCOME_INTENT_NAME:
 

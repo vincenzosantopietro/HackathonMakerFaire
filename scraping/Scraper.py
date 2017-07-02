@@ -320,7 +320,7 @@ if __name__=='__main__':
 
     # _list_news = _scraper.getNews()
     _list_bandi = _scraper.getBandi()
-    # det = _scraper.get_dettaglio_bando("https://www.soresa.it/Pagine/BandoDettaglio.aspx?idDoc=213887&tipoDoc=BANDO_GARA_PORTALE")
+    det = _scraper.get_dettaglio_bando("https://www.soresa.it/Pagine/BandoDettaglio.aspx?idDoc=213887&tipoDoc=BANDO_GARA_PORTALE")
 
     print (_list_bandi)
 
