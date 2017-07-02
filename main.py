@@ -105,6 +105,8 @@ class MainHandler(webapp2.RequestHandler):
             list_convenzioni = scraper.LavoraConNoi()
             data = json.loads(list_convenzioni)
 
+            speech = "Ecco gli ultimi 3 bandi di concorso sul sito Soresa.it\n\n"
+
             for i in range(len(data['result'][:3])):
                 speech += data['result'][i]['text'] + "\n - link: " + \
                           data['result'][i]['link'] + "\n\n"
