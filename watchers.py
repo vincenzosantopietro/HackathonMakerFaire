@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import webapp2
 import base64
 from user.model import *
@@ -10,7 +13,10 @@ from values import BOT_TOKEN
 import urllib
 from user.handlers import *
 from datetime import datetime
+
 from datetime import timedelta
+from django.utils.encoding import smart_str
+import codecs
 
 
 class BandiGaraHandler(webapp2.RequestHandler):
@@ -44,8 +50,7 @@ class CronHandler(webapp2.RequestHandler):
             for bando in bandi:
                 dettaglio_bando = scraper.get_dettaglio_bando(bando.link)
                 j_bando = json.dumps(dettaglio_bando)
-                logging.info("j bando")
-                logging.info(j_bando)
+                logging.info("bando")
                 logging.info(bando.last_edits)
                 h.update(j_bando)
                 new = h.hexdigest()
@@ -53,7 +58,8 @@ class CronHandler(webapp2.RequestHandler):
                 old = h.hexdigest()
 
                 # datetime_object = datetime.strptime(, '%b %d %Y %I:%M%p')
-                date = datetime.strptime(bando['Termine Presentazione Offerte/Domande Di Partecipazione'], "%A, %d %b %Y, ore %H: %M").date()
+                bando_last_edits = json.loads(bando.last_edits)
+                date = datetime.strptime(smart_str(bando_last_edits['dettaglio']['Termine Presentazione Offerte/Domande Di Partecipazione']), "%A, %d %b %Y, ore %H: %M").date()
 
                 if new != old:
                     user = get_user(bando.username)
@@ -62,7 +68,7 @@ class CronHandler(webapp2.RequestHandler):
                                    method=urlfetch.POST)
                     bando.last_edits = j_bando
                     bando.put()
-                elif (date - datetime.now().date() < 3 ):
+                elif date - datetime.now().date() < 3:
 
                     user = get_user(bando.username)
                     urlfetch.fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage",

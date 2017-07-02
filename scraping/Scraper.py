@@ -9,7 +9,7 @@ import ssl
 import urllib
 import yaml
 import re
-
+from django.utils.encoding import smart_str
 
 class Scraper:
 
@@ -117,6 +117,7 @@ class Scraper:
         list_bandi = []
 
 
+
         row_pitchItem = elements.findAll(attrs={"class": "row pitchItem"} )
         row_pitchItem_dark = elements.findAll(attrs={"class": "row pitchItem dark"})
 
@@ -205,9 +206,9 @@ class Scraper:
             if (title.startswith("Termine")):
                 text = text.findAll('span')
                 text = ''.join([d.string for d in text])
-                bando['dettaglio'][title] = text
+                bando['dettaglio'][title] = smart_str(text.encode('utf-8'))
             else:
-                bando['dettaglio'][title] = text.string
+                bando['dettaglio'][title] = smart_str(text.string.encode('utf-8')) if text.string is not None else ""
 
         # Altro
         keys = ['esiti', 'avvisi', 'chiarimenti']
@@ -222,18 +223,18 @@ class Scraper:
                 if i < 2:
                     if len(cols) > 0:
                         row = {
-                            'tipologia': cols[0].string,
-                            'pub_date': cols[1].string if len(cols) > 1 else None,
-                            'desc': cols[2].string if len(cols) > 2 else None,
-                            'allegato': cols[3].string if len(cols) > 3 else None
+                            'tipologia': smart_str(cols[0].string.encode('utf-8')),
+                            'pub_date': smart_str(cols[1].string.encode('utf-8')) if len(cols) > 1 and cols[1].string is not None else "",
+                            'desc': smart_str(cols[2].string.encode('utf-8')) if len(cols) > 2 and cols[2].string is not None else "",
+                            'allegato': smart_str(cols[3].string.encode('utf-8')) if len(cols) > 3 and cols[3].string is not None else ""
                         }
                 else:
                     if len(cols) > 0:
                         row = {
-                            'protocollo': cols[0].string,
-                            'domanda': cols[1].string if len(cols) > 1 else None,
-                            'risposta': cols[2].string if len(cols) > 2 else None,
-                            'allegato': cols[3].string if len(cols) > 3 else None
+                            'protocollo': smart_str(cols[0].string.encode('utf-8')),
+                            'domanda': smart_str(cols[1].string.encode('utf-8')) if len(cols) > 1 and cols[1].string is not None else "",
+                            'risposta': smart_str(cols[2].string.encode('utf-8')) if len(cols) > 2 and cols[2].string is not None else "",
+                            'allegato': smart_str(cols[3].string.encode('utf-8')) if len(cols) > 3 and cols[3].string is not None else ""
                         }
                 bando[key].append(row)
 

@@ -19,3 +19,6 @@ libraries:
 
 - name: pycrypto
   version: "latest"
+
+- name: django
+  version: "latest"
