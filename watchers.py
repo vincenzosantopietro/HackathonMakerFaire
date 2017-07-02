@@ -9,6 +9,8 @@ from google.appengine.api import urlfetch
 from values import BOT_TOKEN
 import urllib
 from user.handlers import *
+from datetime import datetime
+from datetime import timedelta
 
 
 class BandiGaraHandler(webapp2.RequestHandler):
@@ -49,6 +51,10 @@ class CronHandler(webapp2.RequestHandler):
                 new = h.hexdigest()
                 h.update(bando.last_edits)
                 old = h.hexdigest()
+
+                # datetime_object = datetime.strptime(, '%b %d %Y %I:%M%p')
+                date = datetime.strptime(bando['Termine Presentazione Offerte/Domande Di Partecipazione'], "%A, %d %b %Y, ore %H: %M").date()
+
                 if new != old:
                     user = get_user(bando.username)
                     urlfetch.fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage",
@@ -56,3 +62,14 @@ class CronHandler(webapp2.RequestHandler):
                                    method=urlfetch.POST)
                     bando.last_edits = j_bando
                     bando.put()
+                elif (date - datetime.now().date() < 3 ):
+
+                    user = get_user(bando.username)
+                    urlfetch.fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage",
+                                   payload=urllib.urlencode({"chat_id": user.chat_id,
+                                                             "text": 'Mancano 3 giorni alla scadenza del bando \n' + bando.link}),
+                                   method=urlfetch.POST)
+                    bando.last_edits = j_bando
+                    bando.put()
+
+

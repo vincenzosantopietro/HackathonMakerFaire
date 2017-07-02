@@ -47,7 +47,7 @@ class MainHandler(webapp2.RequestHandler):
             # source = jsonobject['result']['source']
 
             for i in range(3):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + "\n - link: " + data['result'][i]['link'] + "\n\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_WELCOME_INTENT_NAME:
 
@@ -85,7 +85,7 @@ class MainHandler(webapp2.RequestHandler):
             data = json.loads(list_bandi)
             speech = "Ecco i bandi per le imprese:\n\n"
             for i in range(len(data['result'])):
-                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+                speech += data['result'][i]['date'].replaceAll("\\s+","") + ": " + data['result'][i]['text'] + "\n - link: " + data['result'][i]['link'] + "\n\n"
             # else:
             #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 

@@ -182,6 +182,10 @@ class Scraper:
 
         page = urlfetch.fetch(url, validate_certificate=True)
 
+        # self.context = ssl._create_unverified_context()
+
+        # page = urllib.urlopen(url,  context=self.context).read()
+
         soup = BeautifulSoup(page.content, 'html.parser')
 
         bando = {
@@ -191,13 +195,22 @@ class Scraper:
         # Dettaglio bando
         parent_element = soup.find(attrs={"class": "form-horizontal"})
         for div in parent_element.findAll(attrs={"class": "form-group"}):
+
             title = div.find(attrs={"class": "control-label"})
+
             if title is None or title == 'Allegati':
                 continue
             else:
                 title = title.string
-            text = div.find(attrs={"class": 'form-control-static'}).string
-            bando['dettaglio'][title] = text
+
+            text = div.find(attrs={"class": 'form-control-static'})
+
+            if (title.startswith("Termine")):
+                text = text.findAll('span')
+                text = ''.join([d.string for d in text])
+                bando['dettaglio'][title] = text
+            else:
+                bando['dettaglio'][title] = text.string
 
         # Altro
         keys = ['esiti', 'avvisi', 'chiarimenti']
@@ -268,19 +281,6 @@ class Scraper:
 
 
 
-
-# def saveJson(url, data):
-#
-#     with open(url, 'w') as f:
-#         json.dump(data,f)
-#
-# def loadJson(url):
-#
-#     with open(url) as data_file:
-#         data = json.load(data_file)
-#
-#     return data
-
 if __name__=='__main__':
 
     url = '/Users/davidenardone/PycharmProjects/HackathonMakerFaire/resources/news.json'
@@ -289,11 +289,9 @@ if __name__=='__main__':
 
     # _list_news = _scraper.getNews()
     # _list_news = _scraper.getConvenzioni()
-    _list_bandi = _scraper.getBandi()
+    det = _scraper.get_dettaglio_bando("https://www.soresa.it/Pagine/BandoDettaglio.aspx?idDoc=213887&tipoDoc=BANDO_GARA_PORTALE")
 
-    _list_lavoro = _scraper.LavoraConNoi()
-
-    print (_list_lavoro)
+    print (det)
 
 
 
