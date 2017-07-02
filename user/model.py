@@ -11,6 +11,7 @@ class AccountModel(ndb.Model):
         'asl',
         'impresa'
     ])
+    chat_id = ndb.StringProperty(required=True)
 
     def get_key_from_username(self):
         return ndb.Key(AccountModel, SHA256.new(self.username).hexdigest())
@@ -19,4 +20,10 @@ class AccountModel(ndb.Model):
 class AliasModel(ndb.Model):
     alias = ndb.StringProperty(required=True)
     platform = ndb.StringProperty(required=True)
+
+
+class BandiWatcherModel(ndb.Model):
+    username = ndb.StringProperty(required=True)
+    link = ndb.StringProperty(required=True)
+    last_edits = ndb.StringProperty(required=True)
 

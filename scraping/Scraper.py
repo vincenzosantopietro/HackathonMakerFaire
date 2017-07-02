@@ -10,6 +10,7 @@ import urllib
 import yaml
 import re
 
+
 class Scraper:
 
     def __init__(self, url='https://www.soresa.it/'):
@@ -99,7 +100,6 @@ class Scraper:
 
         return json.dumps( { "result": list_convenzioni }, indent=4, encoding='iso-8859-8').__str__()
 
-
     def getBandi(self):
 
         # self.context = ssl._create_unverified_context()
@@ -178,6 +178,58 @@ class Scraper:
 
         return json.dumps( { "result": list_bandi }, indent=4, encoding='iso-8859-8').__str__()
 
+    def get_dettaglio_bando(self, url):
+
+        page = urlfetch.fetch(url, validate_certificate=True)
+
+        soup = BeautifulSoup(page.content, 'html.parser')
+
+        bando = {
+            'dettaglio': {}
+        }
+
+        # Dettaglio bando
+        parent_element = soup.find(attrs={"class": "form-horizontal"})
+        for div in parent_element.findAll(attrs={"class": "form-group"}):
+            title = div.find(attrs={"class": "control-label"})
+            if title is None or title == 'Allegati':
+                continue
+            else:
+                title = title.string
+            text = div.find(attrs={"class": 'form-control-static'}).string
+            bando['dettaglio'][title] = text
+
+        # Altro
+        keys = ['esiti', 'avvisi', 'chiarimenti']
+
+        parent_element = soup.findAll(attrs={"class": "convenzioni"})
+        for i, div in enumerate(parent_element):
+            key = keys[i]
+            bando[key] = []
+            for j, tr in enumerate(div.findAll(attrs={"class": "contenuto"})):
+                cols = tr.findAll(attrs={"class": 'form-control-static'})
+                row = None
+                if i < 2:
+                    if len(cols) > 0:
+                        row = {
+                            'tipologia': cols[0].string,
+                            'pub_date': cols[1].string if len(cols) > 1 else None,
+                            'desc': cols[2].string if len(cols) > 2 else None,
+                            'allegato': cols[3].string if len(cols) > 3 else None
+                        }
+                else:
+                    if len(cols) > 0:
+                        row = {
+                            'protocollo': cols[0].string,
+                            'domanda': cols[1].string if len(cols) > 1 else None,
+                            'risposta': cols[2].string if len(cols) > 2 else None,
+                            'allegato': cols[3].string if len(cols) > 3 else None
+                        }
+                bando[key].append(row)
+
+        return bando
+
+
 
     def LavoraConNoi(self):
 
@@ -237,7 +289,7 @@ if __name__=='__main__':
 
     # _list_news = _scraper.getNews()
     # _list_news = _scraper.getConvenzioni()
-    # _list_bandi = _scraper.getBandi()
+    _list_bandi = _scraper.getBandi()
 
     _list_lavoro = _scraper.LavoraConNoi()
 

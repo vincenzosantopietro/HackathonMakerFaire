@@ -12,13 +12,17 @@ from user.handlers import *
 import re
 import base64
 from watchers import *
+from google.appengine.api import urlfetch
+import urllib
 
 
 class MainHandler(webapp2.RequestHandler):
 
     def get(self):
+        url = 'http://www.soresa.it/Pagine/BandoDettaglio.aspx?idDoc=142728&tipoDoc=BANDO_GARA_PORTALE'
         _scraper = Scraper()
-        _scraper.get_contacts()
+        bando = _scraper.get_dettaglio_bando(url)
+        logging.info(bando)
 
 
     def post(self):
@@ -50,11 +54,13 @@ class MainHandler(webapp2.RequestHandler):
             speech ="Ciao, sono E.L.S.A., il tuo assistente personale per il mondo So.Re.Sa.\n\nLa So.Re.Sa. S.p.A. – Società Regionale per la Sanità – è una società strumentale costituita dalla Regione Campania per la realizzazione di azioni strategiche finalizzate alla razionalizzazione della spesa sanitaria regionale. \n\nChe tipologia di utente pensi di essere?"
             source = jsonobject['result']['source']
             logging.info(jsonobject['originalRequest']['data']['message']['from']['username'])
+            chat_id = jsonobject['originalRequest']['data']['message']['chat']['id']
+            username = jsonobject['originalRequest']['data']['message']['from']['username']
             keyboard = dict(inline_keyboard=[
-                [dict(text="Pubblica Amministrazione", url="https://soresaassinstant.appspot.com/register?type=pa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
-                [dict(text="Privato", url="https://soresaassinstant.appspot.com/register?type=privato&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
-                [dict(text="ASL", url="https://soresaassinstant.appspot.com/register?type=asl&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))],
-                [dict(text="Impresa privata / libero professionista", url="https://soresaassinstant.appspot.com/register?type=impresa&username={}".format(jsonobject['originalRequest']['data']['message']['from']['username']))]
+                [dict(text="Pubblica Amministrazione", url="https://elsa-proj.appspot.com/register?type=pa&username={0}&id={1}".format(username, chat_id))],
+                [dict(text="Privato", url="https://elsa-proj.appspot.com/register?type=privato&username={0}&id={1}".format(username, chat_id))],
+                [dict(text="ASL", url="https://elsa-proj.appspot.com/register?type=asl&username={0}&id={1}".format(username, chat_id))],
+                [dict(text="Impresa privata / libero professionista", url="https://elsa-proj.appspot.com/register?type=impresa&username={0}&id={1}".format(username, chat_id))]
             ])
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CONSIGLIOAMMINISTRAZIONE_INTENT_NAME:
@@ -73,29 +79,29 @@ class MainHandler(webapp2.RequestHandler):
         elif jsonobject['result']['metadata']['intentName'] == SORESA_BANDI_INTENT_NAME:
 
             user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
-            if(user.type == "impresa"):
-                scraper = Scraper()
-                list_bandi = scraper.getBandi()
-                data = json.loads(list_bandi)
-                speech = "Ecco i bandi per le imprese:\n\n"
-                for i in range(len(data['result'])):
-                    speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
-            else:
-                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
+            # if(user.type == "impresa"):
+            scraper = Scraper()
+            list_bandi = scraper.getBandi()
+            data = json.loads(list_bandi)
+            speech = "Ecco i bandi per le imprese:\n\n"
+            for i in range(len(data['result'])):
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + data['result'][i]['link'] + "\n\n"
+            # else:
+            #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_CONVENZIONI_INTENT_NAME:
             user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
 
-            if (user.type == "pa"):
-                scraper = Scraper()
-                list_convenzioni = scraper.getConvenzioni()
-                data = json.loads(list_convenzioni)
+            # if (user.type == "pa"):
+            scraper = Scraper()
+            list_convenzioni = scraper.getConvenzioni()
+            data = json.loads(list_convenzioni)
 
-                for i in range(len(data['result'])):
-                    speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
-                              data['result'][i]['link'] + "\n\n"
-            else:
-                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
+            for i in range(len(data['result'])):
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
+                          data['result'][i]['link'] + "\n\n"
+            # else:
+            #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_LAVORA_CON_NOI_NAME:
             # user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
@@ -149,25 +155,25 @@ class MainHandler(webapp2.RequestHandler):
             speech = "I nostri uffici sono a Napoli, Complesso Esedra, Centro Direzionale Is. F9 80143 \n"
             speech += 'https://goo.gl/maps/mTs9KfbM4ZU2'
             source = jsonobject['result']['source']
-            # location = position
+            location = position
 
         elif jsonobject['result']['metadata']['intentName'] == SORESA_TRACCIA_BANDI_INTENT_NAME:
 
             user = get_user(jsonobject['originalRequest']['data']['message']['from']['username'])
-            if (user.type == "impresa"):
-                scraper = Scraper()
-                list_bandi = scraper.getBandi()
-                data = json.loads(list_bandi)
-                speech = "Ecco i bandi per le imprese:\n\n"
-                inline_keyboard = []
-                for i in range(len(data['result'])):
-                    speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
-                              data['result'][i]['link'] + "\n\n"
-                    inline_keyboard.append([dict(text="Traccia Bando {}".format(i+1),url="https://soresaassinstant.appspot.com/watcher_bandi?username={}&link={}".format(jsonobject['originalRequest']['data']['message']['from']['username'],base64.b64encode(data['result'][i]['link'])))])
-                keyboard = dict(inline_keyboard=inline_keyboard)
+            # if (user.type == "impresa"):
+            scraper = Scraper()
+            list_bandi = scraper.getBandi()
+            data = json.loads(list_bandi)
+            speech = "Ecco i bandi per le imprese:\n\n"
+            inline_keyboard = []
+            for i in range(len(data['result'])):
+                speech += data['result'][i]['date'] + ": " + data['result'][i]['text'] + " - link: " + \
+                          data['result'][i]['link'] + "\n\n"
+                inline_keyboard.append([dict(text="Traccia Bando {}".format(i+1),url="https://elsa-proj.appspot.com/watcher_bandi?username={}&link={}".format(jsonobject['originalRequest']['data']['message']['from']['username'],base64.b64encode(data['result'][i]['link'])))])
+            keyboard = dict(inline_keyboard=inline_keyboard)
 
-            else:
-                speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
+            # else:
+            #     speech = "Non ci sono informazioni utili per il tuo tipo di account\n"
 
 
         else:
@@ -212,15 +218,16 @@ class MainHandler(webapp2.RequestHandler):
             out_json = json.dumps({
                 "speech": speech,
                 "displayText": speech,
-                "source": source,
-                "data": {
-                    "telegram": {
-                        "chat_id": jsonobject['id'],
-                        "latitude": float(location['latitude']),
-                        "longitude": float(location['longitude'])
-                    }
-                }
+                "source": source
             }, indent=4)
+
+            urlfetch.fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendLocation",
+                           payload=urllib.urlencode({
+                                "chat_id": jsonobject['originalRequest']['data']['message']['chat']['id'],
+                                "latitude": float(location['latitude']),
+                                "longitude": float(location['longitude'])
+                            }),
+                           method=urlfetch.POST)
 
             logging.info(out_json)
 
@@ -230,6 +237,6 @@ class MainHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/register', RegisterHandler),
-    ('/watcher_bandi',BandiGaraHandler),
-    ('control_bandi',CronHandler)
+    ('/watcher_bandi', BandiGaraHandler),
+    ('/control_bandi', CronHandler)
 ], debug=True)

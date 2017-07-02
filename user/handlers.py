@@ -2,7 +2,7 @@ from model import *
 import logging
 
 
-def insert_user(username, type, platform='telegram'):
+def insert_user(username, type, chat_id, platform='telegram'):
 
     key = ndb.Key(AccountModel, username)
 
@@ -13,6 +13,7 @@ def insert_user(username, type, platform='telegram'):
         user.username = username
         user.user_id = user.get_key_from_username()
         user.type = type
+        user.chat_id = chat_id
         user.put()
 
         user_alias = AliasModel(parent=user.user_id)

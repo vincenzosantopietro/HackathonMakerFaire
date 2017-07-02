@@ -86,6 +86,9 @@ office_contacts = {
 }
 
 position = {
-    'longitude': '14.2799888',
-    'latitude': '40.8586875'
+    'longitude': '14.2810',
+    'latitude': '40.8586'
 }
+
+
+BOT_TOKEN = '425280189:AAHwFRrASkqxUoh-l-ykxYfigtSp_-gErko'
