@@ -25,5 +25,5 @@ class AliasModel(ndb.Model):
 class BandiWatcherModel(ndb.Model):
     username = ndb.StringProperty(required=True)
     link = ndb.StringProperty(required=True)
-    last_edits = ndb.StringProperty(required=True)
+    last_edits = ndb.TextProperty(required=True)
 
