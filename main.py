@@ -127,7 +127,7 @@ class MainHandler(webapp2.RequestHandler):
                      "per la realizzazione di azioni strategiche finalizzate alla razionalizzazione della spesa sanitaria regionale.\n" \
                      "Telefono: 081 212 8174\n" \
                      "Provincia: Provincia di Napoli\n" \
-                     "Sito Web:  https://www.soresa.it/'>https://www.soresa.it/"
+                     "Sito Web:  https://www.soresa.it/"
 
 
         elif 'Contatti_Orari' in jsonobject['result']['metadata']['intentName']:
