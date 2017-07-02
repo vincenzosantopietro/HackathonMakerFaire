@@ -16,7 +16,6 @@ from datetime import datetime
 
 from datetime import timedelta
 from django.utils.encoding import smart_str
-import codecs
 
 
 class BandiGaraHandler(webapp2.RequestHandler):
@@ -59,7 +58,7 @@ class CronHandler(webapp2.RequestHandler):
 
                 # datetime_object = datetime.strptime(, '%b %d %Y %I:%M%p')
                 bando_last_edits = json.loads(bando.last_edits)
-                date = datetime.strptime(smart_str(bando_last_edits['dettaglio']['Termine Presentazione Offerte/Domande Di Partecipazione']), "%A, %d %b %Y, ore %H: %M").date()
+                date = datetime.strptime(smart_str(bando_last_edits['dettaglio']['Termine Presentazione Offerte/Domande Di Partecipazione']), "%a, %d %b %Y %H: %M").date()
 
                 if new != old:
                     user = get_user(bando.username)
@@ -68,7 +67,7 @@ class CronHandler(webapp2.RequestHandler):
                                    method=urlfetch.POST)
                     bando.last_edits = j_bando
                     bando.put()
-                elif date - datetime.now().date() < 3:
+                if date - datetime.now().date() < 3:
 
                     user = get_user(bando.username)
                     urlfetch.fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage",

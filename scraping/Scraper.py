@@ -13,6 +13,31 @@ from django.utils.encoding import smart_str
 
 class Scraper:
 
+    day_map = {
+        "Luned": "Mon",
+        "Marted": "Tue",
+        "Mercoled": "Wed",
+        "Gioved": "Thu",
+        "Venerd": "Fri",
+        "Sabat": "Sat",
+        "Domenic": "Sun"
+    }
+
+    month_map = {
+        "Gen": "Jan",
+        "Feb": "Feb",
+        "Mar": "Mar",
+        "Apr": "Apr",
+        "Mag": "May",
+        "Giu": "Jun",
+        "Lug": "Jul",
+        "Ago": "Auf",
+        "Set": "Sep",
+        "Ott": "Oct",
+        "Nov": "Nov",
+        "Dic": "Dec"
+    }
+
     def __init__(self, url='https://www.soresa.it/'):
         self.base_url = url
 
@@ -206,7 +231,15 @@ class Scraper:
             if (title.startswith("Termine")):
                 text = text.findAll('span')
                 text = ''.join([d.string for d in text])
-                bando['dettaglio'][title] = smart_str(text.encode('utf-8'))
+
+                for i in self.day_map:
+                    if i in text:
+                        text = re.sub(i + '.', self.day_map[i], text)
+                for i in self.month_map:
+                    if i in text:
+                        text = re.sub(i, self.month_map[i], text)
+
+                bando['dettaglio'][title] = text
             else:
                 bando['dettaglio'][title] = smart_str(text.string.encode('utf-8')) if text.string is not None else ""
 
