@@ -1,6 +1,6 @@
 # HackathonMakerFaire
 
-A beta version of chatbot developed during the MakerFair Hackathon in Naples. 
+A beta version of chatbot developed during the Maker Faire Hackathon (30 hrs) in Naples. 
 
 # Tecnologies used
 
