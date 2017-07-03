@@ -12,9 +12,8 @@ A beta version of chatbot developed during the MakerFair Hackathon in Naples.
 
 To play with the bot, just look for `Soresa`.
 
+<img src="https://github.com/DavideNardone/HackathonMakerFaire/blob/master/resources/bot1.png" width="250">
 
-
-  
 # Authors
 
   Davide Nardone, University of Naples Parthenope, Science and Techonlogies Departement, Ms.c Applied Computer Science <br/>
