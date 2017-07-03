@@ -1,4 +1,4 @@
-# HackathonMakerFaire
+# Hackathon Maker Faire
 
 A beta version of chatbot developed during the Maker Faire Hackathon (30 hrs) in Naples. 
 
