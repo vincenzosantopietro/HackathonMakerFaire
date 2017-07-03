@@ -10,7 +10,7 @@ A beta version of chatbot developed during the Maker Faire Hackathon (30 hrs) in
     
 # Usage
 
-To play with the bot, just look for `Soresa`.
+To play with the bot, just look for `soresa_bot` on Telegram.
 
 <img src="https://github.com/DavideNardone/HackathonMakerFaire/blob/master/resources/bot1.png" width="250">
 
